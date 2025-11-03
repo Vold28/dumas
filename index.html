@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pengaduan & Pelaporan Masyarakat – Kemenag Kota Samarinda</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; background:#ffffff; color:#1f1f1f; }
+    a { text-decoration:none; }
+
+    /* HEADER MODERN */
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid #e6e6e6;
+      padding: 18px 0;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    .logo { height: 58px; }
+
+    /* HERO */
+    .hero {
+      padding: 80px 0;
+      text-align:center;
+    }
+    .hero h1 { font-size: 2.5rem; font-weight:700; }
+    .hero p { max-width:700px; margin:auto; font-size:1.1rem; }
+
+    /* CARD */
+    .card-clean {
+      background:#ffffff;
+      border-radius:14px;
+      padding:28px;
+      border: 1px solid #eaeaea;
+      transition: .2s;
+    }
+    .card-clean:hover { box-shadow:0 10px 30px rgba(0,0,0,.06); }
+
+    /* TIMELINE VISUAL */
+    .timeline { position:relative; }
+    .timeline-item {
+      padding-left:48px;
+      margin-bottom:28px;
+      position: relative;
+    }
+    .timeline-item::before {
+      content: '';
+      width: 12px;
+      height: 12px;
+      background: #0a6847;
+      position: absolute;
+      left: 16px;
+      top: 4px;
+      border-radius:50%;
+    }
+
+    .btn-main { background:#0a6847; border:none; color:#fff; }
+    .btn-main:hover { background:#0c7a57; }
+
+    /* Drop zone */
+    .drop-zone { border: 2px dashed #0d6efd; border-radius: 10px; padding: 20px; cursor: pointer; text-align:center; background:#fafafa; }
+    .drop-zone.dragover { background:#e7f1ff; border-color:#0b5ed7; }
+
+    /* RESPONSIVE HERO SPLIT */
+    @media(max-width: 992px){
+      .hero-split{ text-align:center; }
+      .hero-split img{ margin-top:32px; }
+    }
+    @media(max-width: 576px){
+      .hero-split h1{ font-size:1.8rem; }
+      .card-clean{ padding:20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR / HEADER -->
+<header class="container-fluid shadow-sm">
+  <nav class="container d-flex justify-content-between align-items-center py-3">
+    <div class="d-flex align-items-center gap-3">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Logo-kemenag.svg/1024px-Logo-kemenag.svg.png" class="logo" alt="Logo Kemenag" />
+      <div>
+        <h5 class="m-0 fw-bold">Kemenag Kota Samarinda</h5>
+        <small>Layanan Pengaduan & Pelaporan Masyarakat</small>
+      </div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <ul class="nav gap-3 d-none d-md-flex">
+      <li class="nav-item"><a class="nav-link text-dark fw-semibold" href="#dashboard">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link text-dark fw-semibold" href="#alur">Alur Proses</a></li>
+      <li class="nav-item"><a class="nav-link text-dark fw-semibold" href="#form">Form Laporan</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- HERO SPLIT BLUE LEFT + IMAGE RIGHT -->
+<section class="container-fluid" style="background:#0d6efd; color:#fff;">
+  <div class="container py-5">
+    <div class="row align-items-center">
+
+      <!-- LEFT BLUE PANEL CONTENT -->
+      <div class="col-lg-6 mb-4 text-white">
+        <h1 class="fw-bold mb-3">Portal Pengaduan & Pelaporan Masyarakat</h1>
+        <p class="opacity-75">Sampaikan laporan Anda secara mudah, cepat, dan terpantau. Kami berkomitmen terhadap pelayanan yang transparan dan responsif.</p>
+        <a href="#form" class="btn btn-light px-4 py-2 fw-semibold mt-3">Buat Laporan</a>
+      </div>
+
+      <!-- RIGHT IMAGE ILLUSTRATION -->
+      <div class="col-lg-6 text-center">
+        <img src="https://illustrations.popsy.co/white/customer-support.svg" class="img-fluid" alt="Ilustrasi Pengaduan" />
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD SECTION -->
+<section id="dashboard" class="container py-5">
+  <h3 class="mb-4 fw-bold">Dashboard Statistik Laporan</h3>
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card-clean text-center"><canvas id="pieStatus" style="max-width:260px; max-height:260px; margin:auto; display:block;"></canvas></div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-clean text-center"><canvas id="pieKategori" style="max-width:260px; max-height:260px; margin:auto; display:block;"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ALUR PROSES -->
+<section id="alur" class="container py-5">
+  <h3 class="mb-4 fw-bold">Alur Proses Laporan</h3>
+  <div class="card-clean">
+    <div class="timeline">
+      <div class="timeline-item"><strong>Kirim Laporan</strong><br><small>Isi formulir sesuai kebutuhan Anda.</small></div>
+      <div class="timeline-item"><strong>Verifikasi</strong><br><small>Laporan diperiksa oleh petugas.</small></div>
+      <div class="timeline-item"><strong>Tindak Lanjut</strong><br><small>Diteruskan ke unit kerja terkait.</small></div>
+      <div class="timeline-item"><strong>Penyelesaian</strong><br><small>Pelapor mendapatkan update status.</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- FORM SECTION -->
+<section id="form" class="container py-5 mb-5">
+  <h3 class="mb-4 fw-bold">Form Pelaporan</h3>
+  <div class="card-clean">
+    <form id="laporanForm">
+      <label class="fw-semibold">Jenis Laporan</label>
+      <select class="form-select mb-3" id="jenisLaporan" required>
+        <option value="">-- Pilih Jenis Laporan --</option>
+        <option value="pengaduan">Pengaduan</option>
+        <option value="pertanyaan">Pertanyaan</option>
+      </select>
+
+      <div id="dynamicArea"></div>
+
+      <button type="submit" class="btn btn-main w-100 py-2 mt-3">Kirim Laporan</button>
+    </form>
+  </div>
+</section>
+
+<script>
+// Chart placeholders
+new Chart(document.getElementById('pieStatus'), { type:'pie', data:{ labels:['Diproses','Baru','Selesai','Ditolak'], datasets:[{data:[12,5,8,3]}] }, options:{responsive:true, maintainAspectRatio:false} });
+new Chart(document.getElementById('pieKategori'), { type:'pie', data:{ labels:['Pengaduan','Pertanyaan'], datasets:[{data:[7,4]}] }, options:{responsive:true, maintainAspectRatio:false} });
+
+const jenis = document.getElementById("jenisLaporan");
+const area = document.getElementById("dynamicArea");
+
+const template = {
+  pengaduan:`<div class='mb-3'><label class='fw-semibold'>Nama</label><input type='text' class='form-control' name='nama' placeholder='Nama lengkap' required /></div>
+               <div class='mb-3'><label class='fw-semibold'>Alamat</label><input type='text' class='form-control' name='alamat' placeholder='Alamat' required /></div>
+               <div class='mb-3'><label class='fw-semibold'>Email</label><input type='email' class='form-control' name='email' placeholder='email@domain.com' required /></div>
+               <div class='mb-3'><label class='fw-semibold'>No HP</label><input type='tel' class='form-control' name='phone' placeholder='08xxxxxxxxxx' required /></div>
+               <div class='mb-3'><label class='fw-semibold'>Detail Pengaduan</label><textarea class='form-control' name='detail' rows='4' placeholder='Jelaskan kronologi pengaduan...' required></textarea></div>
+               <div class='mb-3'><label class='fw-semibold'>Lampiran (opsional)</label>
+               <div id="drop-zone" class="drop-zone">
+                 <p class="mb-2">📂 Drag & Drop file ke sini atau klik untuk memilih</p>
+                 <input type="file" id="file-input" name="attachment" multiple style="display:none;">
+               </div>
+               <div id="file-list" class="mt-3"></div>
+               </div>` ,
+  pertanyaan:` <div class='mb-3'><label class='fw-semibold'>Nama</label><input type='text' class='form-control' name='nama' placeholder='Nama lengkap' required /></div>
+               <div class='mb-3'><label class='fw-semibold'>Alamat</label><input type='text' class='form-control' name='alamat' placeholder='Alamat' required /></div>
+               <div class='mb-3'><label class='fw-semibold'>Email</label><input type='email' class='form-control' name='email' placeholder='email@domain.com' required /></div>
+               <div class='mb-3'><label class='fw-semibold'>No HP</label><input type='tel' class='form-control' name='phone' placeholder='08xxxxxxxxxx' required /></div>
+               <div class='mb-3'><label class='fw-semibold'>Detail Pertanyaan</label><textarea class='form-control' name='detail' rows='4' placeholder='Tuliskan permohonan informasi secara jelas...' required></textarea></div>
+               <div id="drop-zone" class="drop-zone">
+                 <p class="mb-2">📂 Drag & Drop file ke sini atau klik untuk memilih</p>
+                 <input type="file" id="file-input" name="attachment" multiple style="display:none;">
+               </div>
+               <div id="file-list" class="mt-3"></div>
+               </div>`,
+};
+
+// initialize form fields when jenis changed
+jenis.addEventListener("change", ()=>{
+  area.innerHTML = template[jenis.value] ?? "";
+  // after injecting template, initialize dropzone if present
+  initDropZone();
+});
+
+// drag & drop initialization (call after template inserted)
+function initDropZone(){
+  const dropZone = document.getElementById('drop-zone');
+  const fileInput = document.getElementById('file-input');
+  const fileList = document.getElementById('file-list');
+  if(!dropZone || !fileInput) return;
+
+  // click opens file picker
+  dropZone.addEventListener('click', () => fileInput.click());
+
+  dropZone.addEventListener('dragover', (e)=>{
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+  });
+  dropZone.addEventListener('dragleave', ()=> dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', (e)=>{
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    const files = e.dataTransfer.files;
+    fileInput.files = files;
+    displayFileList(files);
+  });
+
+  fileInput.addEventListener('change', ()=> displayFileList(fileInput.files));
+}
+
+function displayFileList(files){
+  const fileList = document.getElementById('file-list');
+  if(!fileList) return;
+  fileList.innerHTML = '';
+  [...files].forEach(file =>{
+    const el = document.createElement('div');
+    el.className = 'p-2 border rounded mb-2';
+    el.textContent = `📎 ${file.name} (${Math.round(file.size/1024)} KB)`;
+    fileList.appendChild(el);
+  });
+}
+
+// Call once in case default template is already selected
+initDropZone();
+
+// ✅ Submit handler terhubung ke Google Apps Script
+const form = document.getElementById('laporanForm');
+form.addEventListener('submit', async function(e){
+  e.preventDefault();
+
+  const webAppUrl = "https://script.google.com/macros/s/AKfycbw1NqZlOPQ9SOpL2vBw6FysHGFeqL281_NytSbjMlS0WHdd93g0typDU4X3BVhcAk5zuQ/exec"; // <-- ganti dengan URL Web App deployment
+
+  const formData = new FormData(form);
+  const file = document.getElementById('file-input')?.files?.[0];
+
+  let attachment = "";
+  let mimeType = "";
+  let fileName = "";
+
+  if(file){
+    const base64 = await toBase64(file);
+    attachment = base64.split(",")[1];
+    mimeType = file.type;
+    fileName = file.name;
+  }
+
+  const payload = {
+    jenis: jenis.value,
+    nama: formData.get("nama"),
+    alamat: formData.get("alamat"),
+    email: formData.get("email"),
+    phone: formData.get("phone"),
+    detail: formData.get("detail"),
+    attachment,
+    mimeType,
+    fileName
+  };
+
+console.log("Kirim ke:", webAppUrl);
+console.log("Payload:", payload);
+
+fetch(webAppUrl, {
+  method: "POST",
+  mode: "cors",
+  headers: {
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+  },
+  body: JSON.stringify(payload)
+})
+.then(async (res) => {
+
+  let result;
+  try {
+    result = await res.json();
+  } catch (e) {
+    alert("❌ Response bukan JSON. Cek Apps Script 'return'.");
+    return;
+  }
+
+  if (result.success) {
+    alert(`✅ Laporan berhasil dikirim!\nKode Laporan: ${result.kode}`);
+    form.reset();
+    area.innerHTML = "";
+  } else {
+    alert("❌ Server Error: " + result.error);
+  }
+})
+.catch(err => alert("❌ Fetch error: " + err));
+}); // end submit handler
+
+
+</script>
+
+</body>
+</html>
